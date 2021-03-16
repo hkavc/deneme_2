@@ -1,0 +1,217 @@
+Versiyon kontrol sistemi nedir? basitçe bir dosyanız var ve bu dosyanın oluşturulma tarihinden başlayarak istediğiniz tüm durumlarını takip edebildiğiniz bir yapı tasarlıyorsunuz. Bu yapının sorun çıkarıp çıkarmaması tamamen bizim elimizde. Ne kadar iyi tasarlarsak ne kadar çok commit atıp geri dönebileceğimiz noktalar oluşturursak, yönetimi kolay bir yapı tasarlamış oluruz. Kısaca yazılım projemizin tüm anlarını kayıt altına alıyormuşuz gibi düşünebiliriz.
+Repository
+Localimizdeki bir projeyi versiyonlamak istediğimizde proje klasörü içerisinde git init komutunu çalıştırmamız yeterli olacaktır. Böylelikle proje içerisinde .git klasörü oluşacaktır ve bu bizim local repository’imiz olacaktır.
+git add komutuyla staging area’ya aldığım bir değişikliği
+git reset HEAD “dosya uzantısı”
+komutu ile staging area’dan çıkartabilirim. Yaptığım işlemleri geri almak için bunun dışında birçok git komutu bulunmaktadır. Genel olarak kullandıklarımı kısaca açıklamaya çalışacağım.
+git rm -f “dosya uzantısı” Dosyayı projeden tamamen silmiş olacağız.
+git commit -amend -m “commit mesajı” Son commit mesajını değiştirebiliriz.
+git checkout -“dosya uzantısı” Dosya uzantısının staging area’yada olmayan değişikliklerini silip ve dosyayı commit edilen son noktaya geri döndürebiliriz.
+git reset -hard Projede yapılan tüm değişiklikleri silip ve son commit edilen noktaya geri getirebiliriz.
+git reset [hash değerinin ilk 7 karakteri] Commitlediğimiz değişiklikleri geri almamızı sağlar. Bu işlemi yeni bir commit oluşturmadan yapar.
+git revert [hash değerinin ilk 7 karakteri] Commitlediğimiz bir değişikliği geri alırken projemizin tarihçesinden atmış olduğumuz commit’i silmez ve değiştirme işlemini yeni bir commit atarak gerçekleştirir.
+Proje üzerinde değişiklikler yaptık ve tüm değişiklikleri liste halinde görmek istiyoruz bu durumda git status komutuna kullanabiliriz. Bu komut belli gruplar halinde tüm değişiklikleri dönecektir.
+Untracked files: Git tarafından takip edilmeyen tüm dosyaları burada görebiliriz.
+Changes not staged for commit: Bu listedeki dosyalarda değişiklik yapmışız fakat henüz staging area’ya bu değişiklikleri bildirmemişiz.
+Changes to be committed: Staging area’da olan commitlenmeyi bekleyen tüm dosyaları burada görebiliriz.
+Branch
+Git ağaç mantığı ile çalışmaktadır. Bir projeyi versiyonlamak istediğimizde git otomatik olarak master branch’ini oluşturur ve biz bu branch üzerinde çalışmaya başlamış oluruz. Peki neden branchlere gerek duyalım? Bunun bence birden fazla sebebi var. Okulda yaptığımız ufak projelerden tutun, sektördeki birçok şirkette bir proje birden fazla geliştirici tarafından geliştirilir. Yetkili olduğunuz bir projede değişiklik yapmak istediğinizde direk master branch’i üzerinde değişiklik yaptığınızı ve tüm ekibinde bu branch üzerinde çalıştığını düşünün olay çok karmaşık ve yönetilemez bir hal alacaktır. Bir diğer neden ise iki kişi farklı konular üzerinde çalışıyorlarsa farklı branchlerde çalıştıkları için birbirlerini etkilemeyecektir. Yaptığımız tüm değişiklikler sadece bulunduğumuz branch’i etkileyeceği için başka branch açarak farklı bir konuda da geliştirme yapabiliriz ve bunlar birbirlerini etkilemeyeceği için kodu // gibi yorum satırına almaktan veya silmek zorunda kalmaktan kurtulmuş olacağız.
+git branch branchadı Bulunduğumuz branch’den yeni bir branch çıkabiliriz.
+git branch Projedeki local branchleri görebiliriz.
+git branch -v Projedeki local branchleri son commit bilgisi ile görebiliriz.
+git branch -va Local’deki ve remote’daki branchleri liste halinde son commit bilgileri ile görebiliriz.
+git branch branchadı Bulunduğumuz branch’den yeni bir branch çıkabiliriz.
+git branch Projedeki local branchleri görebiliriz.
+git branch -v Projedeki local branchleri son commit bilgisi ile görebiliriz.
+git branch -va Local’deki ve remote’daki branchleri liste halinde son commit bilgileri ile görebiliriz.
+
+git checkout branchadı komutuyla branch’ler arasında geçiş yapabiliriz.
+git branch -d branchadı komutunu kullanabiliriz.
+Silmek istediğimiz branch remote repository de ise
+git branch -dr branchadı
+git push origin :branchadı komutları yardımıyla bu branch’i remote repository’den silmiş olacağız.
+git stash: Bir branch üzerinde çalışırken tam olarak bitmeyen tüm değişiklikleri commitlemeden kayıt altına alıp branch’i ilk durumuna döndürmek isteyebiliriz. Bu durumda tam olarak git stash komutunu kullanmamız gerekir. Bu komut commitlenmemiş tüm değişikliklerimizi kayıt altına alıp branch’i ilk haline çevirir. git stash list komutu ile de geçici olarak kayıt altına alınan değişikliklerin listesini görebiliriz.
+git stash pop Stash list’de olan en üstteki değişikliği geri yükler ve değişiklikleri silebiliriz.
+git stash apply stash@{listId} Stash list’deki değişikliği silmeden geri yükleyebiliriz.
+git stash drop Değişikliği geri yüklemeden stash list’den siler. Bu birazcık tehlikeli bir komut gibi duruyor 
+git commit sonrası
+Bulunduğumuz branch’de commit işlemlerini tamamladık ve artık branch üzerinde yaptığımız tüm değişiklikleri remote repository’de görmek istiyoruz.
+Bu branch remote repository’de ilk kez oluşturulacaksa, git push origin branchadı komutunu kullanarak branch’i remote repository’e pushlayabiliriz. Ama bu branch remote repository’de varsa ve başka geliştiricilerde bu branch üzerinde çalışıyorlarsa
+git fetch
+komutunu kullanarak başka biri tarafından değişiklik yapılıp yapılmadığına bakmamız gerekecektir. Projede aynı branch üzerinde çalıştığımız takım arkadaşlarımız var ise geliştirme yapmaya başlamadan önce bu komut yardımıyla remote branch’deki tüm değişiklikleri local branch’imize almamız gerekir. Bu iki branch arasında farklılıklar bulunuyor ise branch’ler arasında çakışmalar meydana gelebilir.
+git diff komutu ile iki versiyon arasındaki farkları inceleyebilirim.
+Farkları inceleyerek remote branch’deki tüm değişiklikleri local branch’ime alarak local branch’imi çalışır en güncel hale getirmeliyim. Bence bunun nedeni ise local branch’imi push’ladığımda hem kendi geliştirmelerim hemde remote’daki tüm geliştirmeleri içeriyor olması gerektiğidir. Tüm çakışmaları giderirsek artık local’imizdeki branch’i güncel versiyon olarak push’layabiliriz.
+git rebase ve git merge
+Master branch’inin otomatik oluşan ilk branch olduğunu daha öncede belirtmiştim. Master branch’inden geliştirme yapmak için development branch’ini çıktığımda ve development branch’deki tüm geliştirmeleri tamamladığımda bu iki branch’i birleştirmem gerekiyor ki development branch’inde yaptığım tüm değişiklikleri master branch’imde görebileyim. Bu nedenle development branch’imdeki tüm değişiklikleri master branch’ime aktarmam gerekecektir. Bu işlemi gerçekleştirmeden önce dikkat etmemiz gereken tek bir nokta vardır. Master branch’imden development branch’imi çıktıktan sonra bu branch’de herhangi bir değişiklik olup olmadığıdır.
+Master branch’imde herhangi bir değişiklik olmadıysa yani bu branch’in son commit’i ve development branch ile ortak commit’i aynı ise git git rebase ile bu branch’i master ile birleştirebilirim.
+git checkout master komutu ile master branch’ini head yapıyoruz. Daha sonrada git rebase develop komutu ile master branch’ine develop branch’inin tüm tarihçesini aktarmış oluyoruz. Develop branch’indeki tüm değişiklikler artık master branch’imizdede bulunuyor.
+Master branch’inin ortak commit’i ve son commit’i farklı ise yani ben master branch’inden development branch’ini çıktıktan sonra bu branch üzerinde değişiklik olduysa git merge komutu ile development branch’ini master’ın son hali ile birleştirebilirim.
+Bunun için ise rebase’de olduğu gibi öncelikle git checkout master komutu ile değişikliğin aktarılacağı branch’i head yapmam gerekecek. Daha sonra da git merge branchadı komutuyla merge işlemini gerçekleştirmiş olacağım.
+Aslında bakarsanız merge ve rebase çok daha detaylı öğrenilmesi gereken komutlar ben her ikisinden de çok kısaca bahsetmek istedim. Burada tercih tamamen size kalmış her iki durumdada sadece merge kullanabiliriz. Merge ve rebase kullanımını daha detaylı anlatan birkaç kaynak ekliyor olacağım.
+
+Git Nasıl Kullanılır?
+    Bilgisayarımıza kurduktan sonra basit iki komut ile konfigürasyonunu yapmamız gerekmektedir. Bunlar Git’e kim olduğumuzu söyleyen config komutlarıdır.
+git config --global user.name “adım”  Git’e kullanıcı adımızı söylüyoruz.
+git config --global user.emain “mailadresim”  Git’e e-posta adresimizi söylüyoruz.
+     İşte bu kadar. Bundan sonra çeşitli Git komutları aracılığıyla bu sistemi kullanmaya başlayabiliriz.
+Çeşitli Git Komutları
+git init: komutun yazıldığı dizini bir Git Repository’si haline getirir. Buradaki değişikleri kaydedip uzak sunucuya gönderebiliriz.
+git status: bulunduğumuz dizindeki Git durumunu gösterir. Örneğin en son kaydımızdan beri yapılan bir değişiklik var mı gibi.
+git add: Git’in takip etmesi için dosya seçmemizi sağlar. Bu komutu git add . veya git add * şekilde yazarsak üzerinde değişiklik yapılan tüm dosyaların Git’in takip listesine eklenmesini sağlarız.
+git commit: takip listesindeki dosyaların bu komut yazıldığı andaki hallerinin kaydedilmesini sağlar. Tam yazımı git commit –m “mesajım” şeklindedir.
+git push: commit edilmiş olan dosyaların uzak sunucuya gönderilmesini sağlar.
+ Bash:
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme
+$ ls
+ilk_deneme.txt
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme
+$ git init
+Initialized empty Git repository in C:/Users/HKAVC/Desktop/deneme/.git/
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme (master)
+$ git add ilk_
+fatal: pathspec 'ilk_' did not match any files
+
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme (master)
+$ ls -a
+./  ../  .git/  ilk_deneme.txt
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme (master)
+$ git add ilk_deneme.txt
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme (master)
+$ git commit -m "ilk commit"
+[master (root-commit) 62568b9] ilk commit
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 ilk_deneme.txt
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme (master)
+$  git remote add origin https://github.com/hkavc/deneme.git
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme (master)
+$ ls
+ilk_deneme.txt
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme (master)
+$ git status
+On branch master
+nothing to commit, working tree clean
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme (master)
+$ git push -u origin master
+Enumerating objects: 3, done.
+Counting objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 209 bytes | 209.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+remote:
+remote: Create a pull request for 'master' on GitHub by visiting:
+remote:      https://github.com/hkavc/deneme/pull/new/master
+remote:
+To https://github.com/hkavc/deneme.git
+ * [new branch]      master -> master
+Branch 'master' set up to track remote branch 'master' from 'origin'.
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme (master)
+$ ~
+İkinci deneme
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme2
+$ ls
+ilk_deneme.txt
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme2
+$ git init
+Initialized empty Git repository in C:/Users/HKAVC/Desktop/deneme2/.git/
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme2 (master)
+$ git add ilk_deneme.txt
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme2 (master)
+$ git commit -m "ilk commit"
+[master (root-commit) fd8b01a] ilk commit
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 ilk_deneme.txt
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme2 (master)
+$ git remote add origin https://github.com/hkavc/deneme_2.git
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme2 (master)
+$ git push -u origin master
+Enumerating objects: 3, done.
+Counting objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 209 bytes | 209.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+To https://github.com/hkavc/deneme_2.git
+ * [new branch]      master -> master
+Branch 'master' set up to track remote branch 'master' from 'origin'.
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme2 (master)
+$ git add.
+git: 'add.' is not a git command. See 'git --help'.
+
+The most similar command is
+        add
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme2 (master)
+$ git add ilk_deneme
+fatal: pathspec 'ilk_deneme' did not match any files
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme2 (master)
+$ ^C
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme2 (master)
+$ git add ilk_deneme.txt
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme2 (master)
+$ git commit -m “ikinci gönderme”
+error: pathspec 'gönderme”' did not match any file(s) known to git
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme2 (master)
+$ git commit -m "degisti"
+[master cfddacb] degisti
+ 1 file changed, 1 insertion(+)
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme2 (master)
+$ $ git push -u origin master
+bash: $: command not found
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme2 (master)
+$ git push -u origin master
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Writing objects: 100% (3/3), 250 bytes | 250.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+To https://github.com/hkavc/deneme_2.git
+   fd8b01a..cfddacb  master -> master
+Branch 'master' set up to track remote branch 'master' from 'origin'.
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme2 (master)
+$ git add. && git commit -m "ikinci_kayit"
+git: 'add.' is not a git command. See 'git --help'.
+
+The most similar command is
+        add
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme2 (master)
+$ git add ikinci_deneme.txt && git commit -m "ikinci kayit"
+[master 4242658] ikinci kayit
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ create mode 100644 ikinci_deneme.txt
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme2 (master)
+$ git push -u origin master
+Enumerating objects: 4, done.
+Counting objects: 100% (4/4), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 272 bytes | 272.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+To https://github.com/hkavc/deneme_2.git
+   cfddacb..4242658  master -> master
+Branch 'master' set up to track remote branch 'master' from 'origin'.
+
+HKAVC@DESKTOP-QG01RO6 MINGW64 ~/Desktop/deneme2 (master)
+
